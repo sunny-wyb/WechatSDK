@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="clean" name="weChatSDK"> 
+	<target name = "init" description="initialize path">
+		<property name="name" value="weChatSDK" />
+		<property name="src" value="${basedir}/src" />
+		<property name="lib" value="${basedir}/WebContent/WEB-INF/lib" />
+		<property name="webapp" value="${basedir}/WebContent" />
+	
+		<property name="build.src" value="${basedir}/AntBuild/weChatSDK/src/" />
+		<property name="build.dest" value="${basedir}/AntBuild/weChatSDK/WEB-INF/classes" />
+		<property name="buildwar.dest" value="${basedir}/AntBuild/weChatSDK" />
+		<property name="build.javadocs" value="${basedir}/AntBuild/doc" />
+		<property name="jar.dest" value="${basedir}/AntBuild/jar" />
+		<property name="war.dest" value="${basedir}/AntBuild/war" />
+		<!-- Tomcat path configuration -->
+		
+		<path id="classpath">
+			<fileset dir="${lib}">
+				<include name="**/*.jar" /><!-- TODO -->
+			</fileset>
+		</path>
+	</target>
+	
+	<target name="prepare" depends="init" description="mkdirs">
+		<delete dir="${basedir}/AntBuild" />
+		<mkdir dir="${build.src}" />
+		<mkdir dir="${build.dest}" />
+		<mkdir dir="${buildwar.dest}" />
+		<mkdir dir="${jar.dest}" />
+		<mkdir dir="${war.dest}" />
+		<copy todir="${build.src}">
+			<fileset dir="${src}" />
+		</copy>
+		<copy todir="${buildwar.dest}">
+			<fileset dir="${webapp}" />
+		</copy>
+	</target>
+	
+	<target name="build" depends="prepare" description="compile java file, copy properties files">
+		<javac srcdir="${build.src}" destdir="${build.dest}">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+	
+	<target name="antwar" depends="build" description="build war">
+		<war warfile="${war.dest}/weChatSDK.war" webxml="${buildwar.dest}/WEB-INF/web.xml">
+			<lib dir="${buildwar.dest}/WEB-INF/lib" /> 
+			<classes dir="${build.dest}" />
+			<fileset dir="${buildwar.dest}" excludes="**/*.class, WEB-INF/lib/*.jar"/>
+		</war>
+		<delete dir="${build.src}" />
+		<delete dir="${buildwar.dest}" />
+	</target>
+	
+	<target name="publish" depends="antwar" description="deploy war to tomcat dir">
+		<copy todir="${tomcat.home}/webapps">
+			<fileset dir="${war.dest}">
+				<include name="**/*.war" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="clean" depends="publish" description="clean folders">
+		<delete dir="${build.src}" />
+		<delete dir="${buildwar.dest}" />
+		<delete dir="${jar.dest}" />
+		<delete file="${war.dest}/weChatSDK.war" />
+	</target>
+</project>
