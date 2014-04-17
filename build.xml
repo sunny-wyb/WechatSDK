@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="clean" name="weChatSDK"> 
+<project basedir="." default="clean" name="wechat"> 
 	<target name = "init" description="initialize path">
-		<property name="name" value="weChatSDK" />
+		<property name="name" value="wechat" />
 		<property name="src" value="${basedir}/src" />
 		<property name="lib" value="${basedir}/WebContent/WEB-INF/lib" />
 		<property name="webapp" value="${basedir}/WebContent" />
 	
-		<property name="build.src" value="${basedir}/AntBuild/weChatSDK/src/" />
-		<property name="build.dest" value="${basedir}/AntBuild/weChatSDK/WEB-INF/classes" />
-		<property name="buildwar.dest" value="${basedir}/AntBuild/weChatSDK" />
+		<property name="build.src" value="${basedir}/AntBuild/wechat/src/" />
+		<property name="build.dest" value="${basedir}/AntBuild/wechat/WEB-INF/classes" />
+		<property name="buildwar.dest" value="${basedir}/AntBuild/wechat" />
 		<property name="build.javadocs" value="${basedir}/AntBuild/doc" />
 		<property name="jar.dest" value="${basedir}/AntBuild/jar" />
 		<property name="war.dest" value="${basedir}/AntBuild/war" />
 		<!-- Tomcat path configuration -->
+		<property name="tomcat.home" value="C:\Program Files\Apache Software Foundation\Tomcat 7.0" />
 		
 		<path id="classpath">
 			<fileset dir="${lib}">
@@ -43,7 +44,7 @@
 	</target>
 	
 	<target name="antwar" depends="build" description="build war">
-		<war warfile="${war.dest}/weChatSDK.war" webxml="${buildwar.dest}/WEB-INF/web.xml">
+		<war warfile="${war.dest}/wechat.war" webxml="${buildwar.dest}/WEB-INF/web.xml">
 			<lib dir="${buildwar.dest}/WEB-INF/lib" /> 
 			<classes dir="${build.dest}" />
 			<fileset dir="${buildwar.dest}" excludes="**/*.class, WEB-INF/lib/*.jar"/>
@@ -64,6 +65,6 @@
 		<delete dir="${build.src}" />
 		<delete dir="${buildwar.dest}" />
 		<delete dir="${jar.dest}" />
-		<delete file="${war.dest}/weChatSDK.war" />
+		<delete file="${war.dest}/wechat.war" />
 	</target>
 </project>
