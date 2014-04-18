@@ -1,8 +1,10 @@
 package com.wechat;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,6 +39,7 @@ public class MessageReceiver extends HttpServlet{
             }
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error(null , e);
         } finally {
             out.close();
             out = null;
@@ -50,18 +53,26 @@ public class MessageReceiver extends HttpServlet{
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        
+        Enumeration<String> names = request.getParameterNames();
+        while (names.hasMoreElements()) {
+        	String name = names.nextElement();
+        	logger.info("name =" + name + " ; value = " + request.getParameter(name)); 
+        }
+        
         response.setCharacterEncoding("UTF-8");
 
-        // 调用核心业务类接收消息、处理消息
-        //String respMessage = CoreService.processWebchatRequest(request);
-
+     // 调用核心业务类接收消息、处理消息
+        String respMessage = CoreService.processWebchatRequest(request);
+        logger.info("response : " + respMessage);
         // 响应消息
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            out.print("success");
+            out.print(respMessage);
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error(null , e);
         } finally {
             out.close();
             out = null;
